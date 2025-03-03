@@ -8,10 +8,17 @@ public class ThingList {
     public Thing data;
     public ThingList next;
 
+    // public void addThing(Thing T, ThingList L){
+    //     ThingList newThingList = new ThingList();
+    //     newThingList.data = T;
+    //     newThingList.next = this;
+    //     this = newThingList;
+    // }
+
     public void moveAll(ThingList L){
         for( ThingList T = this; T != null; T = T.next ) {
-            T.data.maybeTurn(T.data);
-            T.data.step(T.data);
+            T.data.turn();
+            T.data.step();
         }
     }
 

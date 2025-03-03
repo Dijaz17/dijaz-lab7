@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class Thing {
+public abstract class Thing {
     /**
    * A "Thing" moves in a grid world. A TypeA Thing randomly
    * decides to turn left or right (or not turn) every "round",
@@ -10,69 +10,36 @@ public class Thing {
   
     // dir: 0=North, 1=East, 2=South, 3=West.
     // timeSinceLast: this is only important for "TypeB" Things.
-    public static Random rand = new Random(System.currentTimeMillis());
+    public Random rand = new Random(System.currentTimeMillis());
 
-    public int  row, col, dir, timeSinceLast;
-    public char lab = 'r';
-    public boolean isTypeB = false;
-    public boolean isTypeC = false;
+    protected int row;
+    protected int col;
+    protected int dir;
+    protected int timeSinceLast;
+    protected char lab;
 
-    public void rightTurn(Thing t) {
-        t.dir = (t.dir + 1) % 4;
+    public void rightTurn() {
+        this.dir = (this.dir + 1) % 4;
     }
 
-    public void leftTurn(Thing t) {
-        t.dir = (t.dir + 3) % 4;
+    public void leftTurn() {
+        this.dir = (this.dir + 3) % 4;
     }
 
-    public void maybeTurn(Thing t) {
-        int i = rand.nextInt(3);
-    
-        if (t.isTypeB) {
-          t.timeSinceLast++;
-    
-          if (t.timeSinceLast == 10) {
-            t.timeSinceLast = 0;
-    
-            if (i == 1) {
-              rightTurn(t);
-            }
-    
-            if (i == 2) {
-              leftTurn(t);
-            }
-          }
-        } else if (t.isTypeC){
-            t.timeSinceLast++;
+    public abstract void maybeTurn(Random random);
 
-            if(t.timeSinceLast % 10 == 0){
-                t.timeSinceLast = 0;
-                t.dir = 0;
-            } else if(t.timeSinceLast % 2 == 0){
-                leftTurn(t);
-            } else{
-                rightTurn(t);
-            }
-
-        } else {
-          if (i == 1) {
-            rightTurn(t);
-          }
-    
-          if (i == 2) {
-            leftTurn(t);
-          }
-        }
+    public void turn(){
+        maybeTurn(rand);
     }
 
-    public void step(Thing t) {
+    public void step() {
         final int[] dc = {
           0, 1, 0, -1
         }, dr = {
           1, 0, -1, 0
         };
-        t.row += dr[t.dir];
-        t.col += dc[t.dir];
+        this.row += dr[this.dir];
+        this.col += dc[this.dir];
       }
 
       public String toString() {
